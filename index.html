@@ -1,272 +1,228 @@
-
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Профориентационный тест KAU</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: var(--font-sans); }
-.wrap { max-width: 640px; margin: 0 auto; padding: 1.5rem 1rem; }
-.progress-bar { height: 4px; background: var(--color-border-tertiary); border-radius: 2px; margin-bottom: 2rem; }
-.progress-fill { height: 100%; background: #1D9E75; border-radius: 2px; transition: width 0.4s ease; }
-.q-label { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 0.5rem; }
-.q-text { font-size: 20px; font-weight: 500; color: var(--color-text-primary); line-height: 1.4; margin-bottom: 1.5rem; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; min-height: 100vh; }
+.header { background: #003087; padding: 16px 20px; display: flex; align-items: center; gap: 12px; }
+.header-title { color: white; font-size: 18px; font-weight: 600; }
+.header-sub { color: rgba(255,255,255,0.7); font-size: 13px; }
+.container { max-width: 600px; margin: 0 auto; padding: 24px 16px; }
+.card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+.progress-wrap { margin-bottom: 20px; }
+.progress-top { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.progress-label { font-size: 13px; color: #888; }
+.progress-bar { height: 6px; background: #eee; border-radius: 3px; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #003087, #0057b8); border-radius: 3px; transition: width 0.4s ease; }
+.q-text { font-size: 20px; font-weight: 600; color: #1a1a1a; line-height: 1.4; margin-bottom: 20px; }
 .options { display: flex; flex-direction: column; gap: 10px; }
-.opt { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); cursor: pointer; transition: all 0.15s; background: var(--color-background-primary); }
-.opt:hover { border-color: #1D9E75; background: #E1F5EE; }
-.opt.selected { border-color: #1D9E75; background: #E1F5EE; }
-.opt-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; background: var(--color-background-secondary); flex-shrink: 0; }
-.opt-text { font-size: 15px; color: var(--color-text-primary); }
-.nav { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; }
-.btn { padding: 10px 24px; border-radius: var(--border-radius-md); font-size: 15px; cursor: pointer; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); transition: all 0.15s; }
-.btn:hover { background: var(--color-background-secondary); }
-.btn-primary { background: #1D9E75; color: white; border-color: #1D9E75; }
-.btn-primary:hover { background: #0F6E56; }
+.opt { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 1.5px solid #eee; border-radius: 12px; cursor: pointer; transition: all 0.15s; background: white; }
+.opt:hover { border-color: #003087; background: #f0f4ff; }
+.opt.selected { border-color: #003087; background: #f0f4ff; }
+.opt-icon { font-size: 24px; width: 40px; text-align: center; flex-shrink: 0; }
+.opt-text { font-size: 15px; color: #333; line-height: 1.4; }
+.nav { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+.btn { padding: 12px 24px; border-radius: 10px; font-size: 15px; cursor: pointer; border: 1.5px solid #ddd; background: white; color: #333; transition: all 0.15s; font-weight: 500; }
+.btn:hover { background: #f5f5f5; }
+.btn-primary { background: #003087; color: white; border-color: #003087; }
+.btn-primary:hover { background: #002070; }
 .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.step-count { font-size: 13px; color: #888; }
 .result { display: none; }
-.result-header { text-align: center; padding: 2rem 0 1rem; }
-.result-emoji { font-size: 56px; margin-bottom: 1rem; }
-.result-type { font-size: 22px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 0.5rem; }
-.result-desc { font-size: 15px; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 2rem; }
-.careers-title { font-size: 13px; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; }
-.careers { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-bottom: 1.5rem; }
-.career-card { padding: 12px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); text-align: center; background: var(--color-background-primary); }
-.career-icon { font-size: 22px; margin-bottom: 6px; }
-.career-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
-.spec-block { background: #E1F5EE; border-radius: var(--border-radius-lg); padding: 1.25rem; margin-bottom: 1.5rem; }
-.spec-label { font-size: 12px; color: #0F6E56; margin-bottom: 6px; font-weight: 500; }
-.spec-name { font-size: 17px; font-weight: 500; color: #085041; margin-bottom: 4px; }
-.spec-sub { font-size: 13px; color: #0F6E56; }
-.cta-block { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1.25rem; text-align: center; }
-.cta-text { font-size: 15px; color: var(--color-text-primary); margin-bottom: 1rem; line-height: 1.5; }
-.cta-btn { display: inline-block; padding: 12px 28px; background: #1D9E75; color: white; border-radius: var(--border-radius-md); font-size: 15px; cursor: pointer; border: none; font-weight: 500; }
-.cta-btn:hover { background: #0F6E56; }
-.step-count { font-size: 13px; color: var(--color-text-secondary); }
+.result-header { text-align: center; padding: 16px 0 20px; }
+.result-emoji { font-size: 64px; margin-bottom: 12px; }
+.result-badge { display: inline-block; background: #003087; color: white; padding: 6px 18px; border-radius: 20px; font-size: 13px; margin-bottom: 12px; }
+.result-type { font-size: 24px; font-weight: 700; color: #1a1a1a; margin-bottom: 10px; }
+.result-desc { font-size: 15px; color: #555; line-height: 1.7; margin-bottom: 24px; }
+.section-title { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+.careers { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
+.career-card { padding: 14px; border: 1.5px solid #eee; border-radius: 12px; text-align: center; background: white; }
+.career-icon { font-size: 28px; margin-bottom: 6px; }
+.career-name { font-size: 13px; font-weight: 600; color: #333; }
+.spec-block { background: linear-gradient(135deg, #003087, #0057b8); border-radius: 14px; padding: 20px; margin-bottom: 20px; color: white; }
+.spec-label { font-size: 12px; opacity: 0.8; margin-bottom: 6px; }
+.spec-uni { font-size: 13px; opacity: 0.9; margin-bottom: 4px; }
+.spec-name { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+.cta-block { background: #fff8e6; border: 1.5px solid #ffd966; border-radius: 14px; padding: 20px; margin-bottom: 20px; }
+.cta-text { font-size: 15px; color: #333; line-height: 1.6; margin-bottom: 16px; }
+.cta-btn { display: block; width: 100%; padding: 14px; background: #003087; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; text-align: center; text-decoration: none; }
+.cta-btn:hover { background: #002070; }
+.restart { display: block; text-align: center; margin-top: 16px; color: #888; font-size: 14px; cursor: pointer; text-decoration: underline; }
+.intro { display: block; text-align: center; padding: 8px 0 20px; }
+.intro-title { font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
+.intro-sub { font-size: 15px; color: #555; line-height: 1.6; margin-bottom: 20px; }
+.start-btn { display: inline-block; padding: 14px 36px; background: #003087; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; }
 </style>
-
-<div class="wrap">
-  <div id="quiz-section">
-    <div class="progress-bar"><div class="progress-fill" id="progress" style="width:10%"></div></div>
-    <div class="q-label" id="q-label">Вопрос 1 из 10</div>
-    <div class="q-text" id="q-text"></div>
-    <div class="options" id="options"></div>
-    <div class="nav">
-      <button class="btn" id="btn-back" onclick="goBack()" disabled>Назад</button>
-      <span class="step-count" id="step-count">1 / 10</span>
-      <button class="btn btn-primary" id="btn-next" onclick="goNext()" disabled>Далее</button>
-    </div>
+</head>
+<body>
+<div class="header">
+  <div>
+    <div class="header-title">KAU — Казахско-Американский Университет</div>
+    <div class="header-sub">Профориентационный тест</div>
   </div>
-  <div class="result" id="result-section">
-    <div class="result-header">
-      <div class="result-emoji" id="res-emoji"></div>
-      <div class="result-type" id="res-type"></div>
-      <div class="result-desc" id="res-desc"></div>
+</div>
+<div class="container">
+  <div class="card">
+    <div id="intro-section" class="intro">
+      <div style="font-size:56px;margin-bottom:12px;">🎯</div>
+      <div class="intro-title">Кем ты станешь?</div>
+      <div class="intro-sub">Пройди 10 вопросов и узнай свой тип личности, будущую профессию и идеальную специальность в KAU!</div>
+      <button class="start-btn" onclick="startQuiz()">Начать тест</button>
     </div>
-    <div class="careers-title">Кем ты можешь стать</div>
-    <div class="careers" id="res-careers"></div>
-    <div class="spec-block">
-      <div class="spec-label">Рекомендуемая специальность в KAU</div>
-      <div class="spec-name" id="res-spec"></div>
-      <div class="spec-sub" id="res-spec-sub"></div>
+    <div id="quiz-section" style="display:none;">
+      <div class="progress-wrap">
+        <div class="progress-top">
+          <span class="progress-label" id="q-label">Вопрос 1 из 10</span>
+          <span class="progress-label" id="step-count">10%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progress" style="width:10%"></div></div>
+      </div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <div class="nav">
+        <button class="btn" id="btn-back" onclick="goBack()" disabled>← Назад</button>
+        <button class="btn btn-primary" id="btn-next" onclick="goNext()" disabled>Далее →</button>
+      </div>
     </div>
-    <div class="cta-block">
-      <div class="cta-text" id="res-cta"></div>
-      <button class="cta-btn" onclick="sendPrompt('Хочу узнать больше о специальности ' + document.getElementById(\'res-spec\').textContent + ' в KAU и записаться на консультацию')">Записаться на консультацию</button>
+    <div class="result" id="result-section">
+      <div class="result-header">
+        <div class="result-emoji" id="res-emoji"></div>
+        <div class="result-badge">Твой тип личности</div>
+        <div class="result-type" id="res-type"></div>
+        <div class="result-desc" id="res-desc"></div>
+      </div>
+      <div class="section-title">Кем ты можешь стать</div>
+      <div class="careers" id="res-careers"></div>
+      <div class="spec-block">
+        <div class="spec-label">Рекомендуемая специальность в KAU</div>
+        <div class="spec-name" id="res-spec"></div>
+        <div class="spec-uni" id="res-spec-sub"></div>
+      </div>
+      <div class="cta-block">
+        <div class="cta-text" id="res-cta"></div>
+        <a class="cta-btn" href="https://kauadmission.bitrix24.site/consultation/" target="_blank">Записаться на консультацию в KAU</a>
+      </div>
+      <div style="text-align:center;margin-top:12px;">
+        <a href="https://instagram.com/kau.kz" target="_blank" style="color:#003087;font-size:14px;margin-right:16px;">📱 Instagram</a>
+        <a href="https://t.me/kau_freshmen" target="_blank" style="color:#003087;font-size:14px;">📢 Telegram</a>
+      </div>
+      <span class="restart" onclick="restartQuiz()">Пройти тест заново</span>
     </div>
   </div>
 </div>
-
 <script>
 const questions = [
   { text: "Как ты обычно проводишь свободное время?", opts: [
-    { text: "Смотрю новости, читаю про политику и мир", icon: "🌍", scores: {intl:3, jour:2} },
-    { text: "Листаю соцсети, придумываю контент", icon: "📱", scores: {mark:3, jour:2, creat:1} },
-    { text: "Решаю задачи, играю в стратегии", icon: "🧩", scores: {it:3, fin:2, ba:1} },
-    { text: "Общаюсь с людьми, организую встречи", icon: "🤝", scores: {biz:3, tour:2, hr:1} }
+    { text: "Смотрю новости, читаю про политику и мир", icon: "🌍", scores: {intl:3,jour:2} },
+    { text: "Листаю соцсети, придумываю контент", icon: "📱", scores: {mark:3,jour:2,creat:1} },
+    { text: "Решаю задачи, играю в стратегии", icon: "🧩", scores: {it:3,fin:2,ba:1} },
+    { text: "Общаюсь с людьми, организую встречи", icon: "🤝", scores: {biz:3,tour:2} }
   ]},
   { text: "Что тебя больше всего вдохновляет?", opts: [
-    { text: "Создавать что-то новое — контент, идеи, проекты", icon: "✨", scores: {creat:3, mark:2, jour:1} },
-    { text: "Разбираться в данных и находить закономерности", icon: "📊", scores: {ba:3, fin:2, it:1} },
-    { text: "Помогать людям решать их проблемы", icon: "💛", scores: {law:3, biz:2, tour:1} },
-    { text: "Изучать другие культуры и языки", icon: "🗺️", scores: {intl:3, lang:3, tour:2} }
+    { text: "Создавать что-то новое — контент, идеи, проекты", icon: "✨", scores: {creat:3,mark:2,jour:1} },
+    { text: "Разбираться в данных и находить закономерности", icon: "📊", scores: {ba:3,fin:2,it:1} },
+    { text: "Помогать людям решать их проблемы", icon: "💛", scores: {law:3,biz:2,tour:1} },
+    { text: "Изучать другие культуры и языки", icon: "🗺️", scores: {intl:3,lang:3,tour:2} }
   ]},
   { text: "В командном проекте ты чаще всего:", opts: [
-    { text: "Берёшь на себя роль лидера и организатора", icon: "👑", scores: {biz:3, mark:2, intl:1} },
-    { text: "Анализируешь данные и предлагаешь решения", icon: "🔍", scores: {ba:3, fin:2, it:2} },
-    { text: "Занимаешься коммуникацией и презентацией", icon: "🎤", scores: {jour:3, mark:2, creat:2} },
-    { text: "Следишь за правилами и справедливостью", icon: "⚖️", scores: {law:3, fin:1} }
+    { text: "Берёшь роль лидера и организатора", icon: "👑", scores: {biz:3,mark:2,intl:1} },
+    { text: "Анализируешь данные и предлагаешь решения", icon: "🔍", scores: {ba:3,fin:2,it:2} },
+    { text: "Занимаешься коммуникацией и презентацией", icon: "🎤", scores: {jour:3,mark:2,creat:2} },
+    { text: "Следишь за правилами и справедливостью", icon: "⚖️", scores: {law:3,fin:1} }
   ]},
-  { text: "Какой предмет в школе нравился больше всего?", opts: [
-    { text: "История, обществознание, география", icon: "📚", scores: {intl:3, law:2, jour:1} },
-    { text: "Математика, информатика", icon: "💻", scores: {it:3, fin:3, ba:2} },
-    { text: "Литература, иностранные языки", icon: "✍️", scores: {lang:3, jour:2, creat:2} },
-    { text: "Экономика, предпринимательство", icon: "💰", scores: {biz:3, fin:2, mark:2} }
+  { text: "Какой предмет нравился больше всего?", opts: [
+    { text: "История, обществознание, география", icon: "📚", scores: {intl:3,law:2,jour:1} },
+    { text: "Математика, информатика", icon: "💻", scores: {it:3,fin:3,ba:2} },
+    { text: "Литература, иностранные языки", icon: "✍️", scores: {lang:3,jour:2,creat:2} },
+    { text: "Экономика, предпринимательство", icon: "💰", scores: {biz:3,fin:2,mark:2} }
   ]},
   { text: "Какое будущее ты себе представляешь?", opts: [
-    { text: "Работаю в крупной международной компании", icon: "🏢", scores: {intl:3, biz:3, fin:2} },
-    { text: "Строю свой бизнес или стартап", icon: "🚀", scores: {biz:3, it:2, mark:2} },
-    { text: "Работаю в медиа, создаю контент", icon: "🎬", scores: {jour:3, creat:3, mark:2} },
-    { text: "Защищаю права людей или работаю в госструктурах", icon: "🏛️", scores: {law:3, intl:2} }
+    { text: "Работаю в крупной международной компании", icon: "🏢", scores: {intl:3,biz:3,fin:2} },
+    { text: "Строю свой бизнес или стартап", icon: "🚀", scores: {biz:3,it:2,mark:2} },
+    { text: "Работаю в медиа, создаю контент", icon: "🎬", scores: {jour:3,creat:3,mark:2} },
+    { text: "Защищаю права людей или работаю в госструктурах", icon: "🏛️", scores: {law:3,intl:2} }
   ]},
   { text: "Как ты принимаешь решения?", opts: [
-    { text: "Анализирую факты и цифры", icon: "📈", scores: {ba:3, fin:3, it:1} },
-    { text: "Прислушиваюсь к интуиции и чувствам", icon: "💭", scores: {creat:3, jour:2} },
-    { text: "Советуюсь с людьми, учитываю мнения", icon: "👥", scores: {biz:2, mark:2, tour:2} },
-    { text: "Изучаю законы, правила и прецеденты", icon: "📋", scores: {law:3, fin:1} }
+    { text: "Анализирую факты и цифры", icon: "📈", scores: {ba:3,fin:3,it:1} },
+    { text: "Прислушиваюсь к интуиции и чувствам", icon: "💭", scores: {creat:3,jour:2} },
+    { text: "Советуюсь с людьми, учитываю мнения", icon: "👥", scores: {biz:2,mark:2,tour:2} },
+    { text: "Изучаю законы, правила и прецеденты", icon: "📋", scores: {law:3,fin:1} }
   ]},
   { text: "Что тебя раздражает больше всего?", opts: [
-    { text: "Несправедливость и нарушение правил", icon: "😤", scores: {law:3, intl:1} },
-    { text: "Скука и однообразие", icon: "😴", scores: {creat:3, tour:2, mark:1} },
-    { text: "Неэффективность и беспорядок в процессах", icon: "😠", scores: {ba:3, fin:2, it:2} },
-    { text: "Когда нет возможности общаться и путешествовать", icon: "✈️", scores: {tour:3, intl:2, lang:2} }
+    { text: "Несправедливость и нарушение правил", icon: "😤", scores: {law:3,intl:1} },
+    { text: "Скука и однообразие", icon: "😴", scores: {creat:3,tour:2,mark:1} },
+    { text: "Неэффективность и беспорядок", icon: "😠", scores: {ba:3,fin:2,it:2} },
+    { text: "Нет возможности общаться и путешествовать", icon: "✈️", scores: {tour:3,intl:2,lang:2} }
   ]},
   { text: "Какой тип работы тебе ближе?", opts: [
-    { text: "Работа с людьми — переговоры, презентации", icon: "🗣️", scores: {biz:2, mark:2, intl:2, law:1} },
-    { text: "Работа с технологиями и программами", icon: "⚙️", scores: {it:3, ba:2, fin:1} },
-    { text: "Творческая работа — тексты, видео, дизайн", icon: "🎨", scores: {creat:3, jour:2, mark:2} },
-    { text: "Аналитическая работа — отчёты, стратегии", icon: "📉", scores: {fin:3, ba:3, law:1} }
+    { text: "Работа с людьми — переговоры, презентации", icon: "🗣️", scores: {biz:2,mark:2,intl:2,law:1} },
+    { text: "Работа с технологиями и программами", icon: "⚙️", scores: {it:3,ba:2,fin:1} },
+    { text: "Творческая работа — тексты, видео, дизайн", icon: "🎨", scores: {creat:3,jour:2,mark:2} },
+    { text: "Аналитическая работа — отчёты, стратегии", icon: "📉", scores: {fin:3,ba:3,law:1} }
   ]},
   { text: "Какие ценности для тебя важнее всего?", opts: [
-    { text: "Свобода и возможность путешествовать", icon: "🌐", scores: {tour:3, intl:3, lang:2} },
-    { text: "Стабильность и высокий доход", icon: "💎", scores: {fin:3, law:2, it:2} },
-    { text: "Влияние и возможность менять мир", icon: "⚡", scores: {intl:3, jour:3, law:1} },
-    { text: "Творчество и самовыражение", icon: "🌟", scores: {creat:3, mark:2, jour:1} }
+    { text: "Свобода и возможность путешествовать", icon: "🌐", scores: {tour:3,intl:3,lang:2} },
+    { text: "Стабильность и высокий доход", icon: "💎", scores: {fin:3,law:2,it:2} },
+    { text: "Влияние и возможность менять мир", icon: "⚡", scores: {intl:3,jour:3,law:1} },
+    { text: "Творчество и самовыражение", icon: "🌟", scores: {creat:3,mark:2,jour:1} }
   ]},
   { text: "Если бы ты мог прямо сейчас выбрать занятие:", opts: [
-    { text: "Запустить рекламную кампанию в соцсетях", icon: "📣", scores: {mark:3, creat:2} },
-    { text: "Разработать приложение или сайт", icon: "💡", scores: {it:3, ba:2} },
-    { text: "Провести переговоры с иностранными партнёрами", icon: "🤝", scores: {intl:3, biz:2, lang:2} },
-    { text: "Написать статью или снять репортаж", icon: "📰", scores: {jour:3, creat:2} }
+    { text: "Запустить рекламную кампанию в соцсетях", icon: "📣", scores: {mark:3,creat:2} },
+    { text: "Разработать приложение или сайт", icon: "💡", scores: {it:3,ba:2} },
+    { text: "Провести переговоры с иностранными партнёрами", icon: "🤝", scores: {intl:3,biz:2,lang:2} },
+    { text: "Написать статью или снять репортаж", icon: "📰", scores: {jour:3,creat:2} }
   ]}
 ];
 
 const profiles = {
-  intl: {
-    emoji: "🌍",
-    type: "Дипломат и стратег",
-    desc: "Ты мыслишь глобально, интересуешься миром и умеешь видеть большую картину. Тебе легко находить общий язык с людьми разных культур — это редкий и ценный дар в современном мире.",
-    careers: [{icon:"🏛️",name:"Дипломат"},{icon:"🌐",name:"Международный менеджер"},{icon:"📋",name:"Политический аналитик"},{icon:"🤝",name:"Переговорщик"}],
-    spec: "Международные отношения",
-    specSub: "Факультет международных коммуникаций KAU",
-    cta: "В KAU ты получишь международный диплом, будешь учиться у преподавателей из США и выучишь английский до уровня переговоров. Твоя карьера начнётся ещё во время учёбы!"
-  },
-  mark: {
-    emoji: "📣",
-    type: "Маркетолог и трендсеттер",
-    desc: "Ты чувствуешь тренды раньше других, умеешь убеждать и знаешь как говорить с аудиторией. В эпоху цифрового маркетинга такие люди ценятся на вес золота.",
-    careers: [{icon:"📱",name:"SMM-директор"},{icon:"🎯",name:"Бренд-менеджер"},{icon:"📊",name:"Growth hacker"},{icon:"💼",name:"Маркетинг-директор"}],
-    spec: "Цифровой маркетинг",
-    specSub: "Факультет бизнеса и технологий KAU",
-    cta: "В KAU ты освоишь реальные инструменты — таргетинг, аналитику, контент-стратегии. Выпускники работают в топовых казахстанских и международных компаниях!"
-  },
-  it: {
-    emoji: "💻",
-    type: "Технологический визионер",
-    desc: "Ты думаешь системно и любишь решать сложные задачи. IT — это не просто профессия, это суперсила 21 века. Ты будешь создавать то, чем пользуются миллионы.",
-    careers: [{icon:"🤖",name:"AI-инженер"},{icon:"💡",name:"IT-предприниматель"},{icon:"📱",name:"Разработчик"},{icon:"🔐",name:"Кибербезопасность"}],
-    spec: "AI в бизнесе и технологиях",
-    specSub: "Факультет бизнеса и технологий KAU",
-    cta: "KAU — единственный университет в Казахстане с программой AI в бизнесе. Ты будешь учиться на реальных проектах и получишь диплом международного уровня!"
-  },
-  fin: {
-    emoji: "💰",
-    type: "Финансовый стратег",
-    desc: "Ты умеешь видеть ценность там где другие не замечают. Аналитический ум и стремление к стабильности — это путь к настоящему финансовому успеху и карьере в лучших компаниях.",
-    careers: [{icon:"📊",name:"Финансовый аналитик"},{icon:"🏦",name:"Инвестиционный банкир"},{icon:"💹",name:"Трейдер"},{icon:"🔎",name:"Аудитор"}],
-    spec: "Финансы / Финансовые технологии",
-    specSub: "Факультет экономики KAU",
-    cta: "В KAU финансисты учатся на реальных кейсах крупных компаний. Стажировки, международные сертификаты и высокооплачиваемая карьера ждут тебя!"
-  },
-  law: {
-    emoji: "⚖️",
-    type: "Защитник и стратег",
-    desc: "Ты ценишь справедливость и умеешь находить нужные аргументы в любой ситуации. Юристы — одна из самых востребованных и уважаемых профессий в Казахстане и в мире.",
-    careers: [{icon:"🏛️",name:"Юрист"},{icon:"⚖️",name:"Адвокат"},{icon:"📋",name:"Нотариус"},{icon:"🌐",name:"Международный юрист"}],
-    spec: "Юриспруденция",
-    specSub: "Юридический факультет KAU",
-    cta: "KAU готовит юристов по американской модели образования. Ты научишься думать как юрист и строить карьеру в топовых юридических фирмах страны!"
-  },
-  biz: {
-    emoji: "🚀",
-    type: "Предприниматель и лидер",
-    desc: "Ты прирождённый лидер с предпринимательским мышлением. Ты видишь возможности там где другие видят проблемы. Казахстан нуждается в таких людях как ты!",
-    careers: [{icon:"🏢",name:"CEO / Основатель"},{icon:"💼",name:"Топ-менеджер"},{icon:"🌐",name:"Бизнес-консультант"},{icon:"📈",name:"Венчурный инвестор"}],
-    spec: "Международный бизнес и предпринимательство",
-    specSub: "Бизнес-школа KAU",
-    cta: "Бизнес-школа KAU воспитывает настоящих лидеров. Менторы из реального бизнеса, стажировки и международный нетворкинг — твой старт к успеху!"
-  },
-  jour: {
-    emoji: "🎬",
-    type: "Голос поколения",
-    desc: "Ты умеешь рассказывать истории которые трогают людей. В мире где каждый борется за внимание — твой талант к коммуникации это самый ценный актив.",
-    careers: [{icon:"📹",name:"Журналист"},{icon:"🎙️",name:"Контент-директор"},{icon:"📱",name:"Блогер / медиа"},{icon:"🎬",name:"Продюсер"}],
-    spec: "Журналистика / Креативные индустрии",
-    specSub: "Факультет медиа и коммуникаций KAU",
-    cta: "В KAU есть реальные студии, медиалаборатории и партнёрства с медиакомпаниями Казахстана. Твоя карьера начнётся ещё на первом курсе!"
-  },
-  creat: {
-    emoji: "🎨",
-    type: "Творческий визионер",
-    desc: "Ты видишь мир иначе и умеешь воплощать идеи в жизнь. Креативная экономика — одна из самых быстрорастущих отраслей. Твой творческий потенциал стоит целое состояние.",
-    careers: [{icon:"🎬",name:"Продюсер"},{icon:"🎨",name:"Креативный директор"},{icon:"📱",name:"Контент-мейкер"},{icon:"🌟",name:"Event-директор"}],
-    spec: "Креативные индустрии и продюсирование",
-    specSub: "Факультет медиа и коммуникаций KAU",
-    cta: "KAU — место где твои идеи станут реальностью. Мы учим создавать проекты которые меняют культуру и приносят доход!"
-  },
-  ba: {
-    emoji: "📊",
-    type: "Аналитик и стратег",
-    desc: "Ты умеешь превращать данные в решения. В эпоху big data такие специалисты нужны абсолютно всем — от стартапов до государства. Ты будешь влиять на бизнес-решения миллионов.",
-    careers: [{icon:"📊",name:"Бизнес-аналитик"},{icon:"🤖",name:"Data scientist"},{icon:"💡",name:"Стратег"},{icon:"🏢",name:"Консультант McKinsey"}],
-    spec: "Бизнес-аналитика / Бизнес и ИТ",
-    specSub: "Факультет бизнеса и технологий KAU",
-    cta: "KAU даёт навыки анализа данных, работы с AI-инструментами и стратегического мышления. Выпускники работают в топовых компаниях Казахстана и за рубежом!"
-  },
-  tour: {
-    emoji: "✈️",
-    type: "Исследователь мира",
-    desc: "Тебя тянет к новым местам, людям и впечатлениям. Туризм — это не просто путешествия, это огромная индустрия где твоя энергия и коммуникабельность откроют любые двери.",
-    careers: [{icon:"✈️",name:"Директор отеля"},{icon:"🌐",name:"Туристический директор"},{icon:"🗺️",name:"Менеджер курорта"},{icon:"💼",name:"Travel-предприниматель"}],
-    spec: "Туризм",
-    specSub: "Факультет международных коммуникаций KAU",
-    cta: "В KAU туризм изучают с международным подходом — стажировки в отелях, партнёрства с туристическими компаниями и диплом который ценят по всему миру!"
-  },
-  lang: {
-    emoji: "🗣️",
-    type: "Мост между культурами",
-    desc: "Ты обладаешь редким даром — чувствовать язык и культуру. Переводчики и лингвисты востребованы в дипломатии, бизнесе, IT и международных организациях.",
-    careers: [{icon:"🌐",name:"Переводчик-синхронист"},{icon:"🏛️",name:"Дипломат"},{icon:"📚",name:"Международный эксперт"},{icon:"💼",name:"Локализатор"}],
-    spec: "Переводческое дело",
-    specSub: "Факультет международных коммуникаций KAU",
-    cta: "KAU — университет где английский это не просто предмет, а среда обучения. Ты будешь говорить свободно уже к концу первого года!"
-  }
+  intl: { emoji:"🌍", type:"Дипломат и стратег", desc:"Ты мыслишь глобально и умеешь видеть большую картину. Тебе легко находить общий язык с людьми разных культур — это редкий и ценный дар в современном мире.", careers:[{icon:"🏛️",name:"Дипломат"},{icon:"🌐",name:"Международный менеджер"},{icon:"📋",name:"Политический аналитик"},{icon:"🤝",name:"Переговорщик"}], spec:"Международные отношения", specSub:"Факультет международных коммуникаций KAU", cta:"В KAU ты получишь международный диплом, будешь учиться у преподавателей из США и выучишь английский до уровня переговоров. Твоя карьера начнётся ещё во время учёбы!" },
+  mark: { emoji:"📣", type:"Маркетолог и трендсеттер", desc:"Ты чувствуешь тренды раньше других и знаешь как говорить с аудиторией. В эпоху цифрового маркетинга такие люди ценятся на вес золота.", careers:[{icon:"📱",name:"SMM-директор"},{icon:"🎯",name:"Бренд-менеджер"},{icon:"📊",name:"Growth hacker"},{icon:"💼",name:"Маркетинг-директор"}], spec:"Цифровой маркетинг", specSub:"Факультет бизнеса и технологий KAU", cta:"В KAU ты освоишь реальные инструменты — таргетинг, аналитику, контент-стратегии. Выпускники работают в топовых казахстанских и международных компаниях!" },
+  it: { emoji:"💻", type:"Технологический визионер", desc:"Ты думаешь системно и любишь решать сложные задачи. IT — это суперсила 21 века. Ты будешь создавать то, чем пользуются миллионы.", careers:[{icon:"🤖",name:"AI-инженер"},{icon:"💡",name:"IT-предприниматель"},{icon:"📱",name:"Разработчик"},{icon:"🔐",name:"Кибербезопасность"}], spec:"AI в бизнесе и технологиях", specSub:"Факультет бизнеса и технологий KAU", cta:"KAU — единственный университет в Казахстане с программой AI в бизнесе. Ты будешь учиться на реальных проектах и получишь диплом международного уровня!" },
+  fin: { emoji:"💰", type:"Финансовый стратег", desc:"Ты умеешь видеть ценность там где другие не замечают. Аналитический ум и стремление к стабильности — это путь к настоящему финансовому успеху.", careers:[{icon:"📊",name:"Финансовый аналитик"},{icon:"🏦",name:"Инвестиционный банкир"},{icon:"💹",name:"Трейдер"},{icon:"🔎",name:"Аудитор"}], spec:"Финансы / Финансовые технологии", specSub:"Факультет экономики KAU", cta:"В KAU финансисты учатся на реальных кейсах крупных компаний. Стажировки, международные сертификаты и высокооплачиваемая карьера ждут тебя!" },
+  law: { emoji:"⚖️", type:"Защитник и стратег", desc:"Ты ценишь справедливость и умеешь находить нужные аргументы. Юристы — одна из самых востребованных профессий в Казахстане и в мире.", careers:[{icon:"🏛️",name:"Юрист"},{icon:"⚖️",name:"Адвокат"},{icon:"📋",name:"Нотариус"},{icon:"🌐",name:"Международный юрист"}], spec:"Юриспруденция", specSub:"Юридический факультет KAU", cta:"KAU готовит юристов по американской модели образования. Ты научишься думать как юрист и строить карьеру в топовых юридических фирмах страны!" },
+  biz: { emoji:"🚀", type:"Предприниматель и лидер", desc:"Ты прирождённый лидер с предпринимательским мышлением. Ты видишь возможности там где другие видят проблемы. Казахстан нуждается в таких людях!", careers:[{icon:"🏢",name:"CEO / Основатель"},{icon:"💼",name:"Топ-менеджер"},{icon:"🌐",name:"Бизнес-консультант"},{icon:"📈",name:"Венчурный инвестор"}], spec:"Международный бизнес и предпринимательство", specSub:"Бизнес-школа KAU", cta:"Бизнес-школа KAU воспитывает настоящих лидеров. Менторы из реального бизнеса, стажировки и международный нетворкинг — твой старт к успеху!" },
+  jour: { emoji:"🎬", type:"Голос поколения", desc:"Ты умеешь рассказывать истории которые трогают людей. В мире где каждый борется за внимание — твой талант к коммуникации это самый ценный актив.", careers:[{icon:"📹",name:"Журналист"},{icon:"🎙️",name:"Контент-директор"},{icon:"📱",name:"Блогер / медиа"},{icon:"🎬",name:"Продюсер"}], spec:"Журналистика / Креативные индустрии", specSub:"Факультет медиа и коммуникаций KAU", cta:"В KAU есть реальные студии, медиалаборатории и партнёрства с медиакомпаниями Казахстана. Твоя карьера начнётся ещё на первом курсе!" },
+  creat: { emoji:"🎨", type:"Творческий визионер", desc:"Ты видишь мир иначе и умеешь воплощать идеи в жизнь. Креативная экономика — одна из самых быстрорастущих отраслей. Твой потенциал стоит целое состояние.", careers:[{icon:"🎬",name:"Продюсер"},{icon:"🎨",name:"Креативный директор"},{icon:"📱",name:"Контент-мейкер"},{icon:"🌟",name:"Event-директор"}], spec:"Креативные индустрии и продюсирование", specSub:"Факультет медиа и коммуникаций KAU", cta:"KAU — место где твои идеи станут реальностью. Мы учим создавать проекты которые меняют культуру и приносят доход!" },
+  ba: { emoji:"📊", type:"Аналитик и стратег", desc:"Ты умеешь превращать данные в решения. В эпоху big data такие специалисты нужны абсолютно всем — от стартапов до государства.", careers:[{icon:"📊",name:"Бизнес-аналитик"},{icon:"🤖",name:"Data scientist"},{icon:"💡",name:"Стратег"},{icon:"🏢",name:"Консультант"}], spec:"Бизнес-аналитика / Бизнес и ИТ", specSub:"Факультет бизнеса и технологий KAU", cta:"KAU даёт навыки анализа данных, работы с AI-инструментами и стратегического мышления. Выпускники работают в топовых компаниях Казахстана и за рубежом!" },
+  tour: { emoji:"✈️", type:"Исследователь мира", desc:"Тебя тянет к новым местам, людям и впечатлениям. Туризм — огромная индустрия где твоя энергия и коммуникабельность откроют любые двери.", careers:[{icon:"✈️",name:"Директор отеля"},{icon:"🌐",name:"Туристический директор"},{icon:"🗺️",name:"Менеджер курорта"},{icon:"💼",name:"Travel-предприниматель"}], spec:"Туризм", specSub:"Факультет международных коммуникаций KAU", cta:"В KAU туризм изучают с международным подходом — стажировки в отелях, партнёрства с туристическими компаниями и диплом который ценят по всему миру!" },
+  lang: { emoji:"🗣️", type:"Мост между культурами", desc:"Ты обладаешь редким даром — чувствовать язык и культуру. Переводчики и лингвисты востребованы в дипломатии, бизнесе и международных организациях.", careers:[{icon:"🌐",name:"Переводчик-синхронист"},{icon:"🏛️",name:"Дипломат"},{icon:"📚",name:"Международный эксперт"},{icon:"💼",name:"Локализатор"}], spec:"Переводческое дело", specSub:"Факультет международных коммуникаций KAU", cta:"KAU — университет где английский это не просто предмет, а среда обучения. Ты будешь говорить свободно уже к концу первого года!" }
 };
 
 let current = 0;
 let answers = [];
-let scores = {intl:0,mark:0,it:0,fin:0,law:0,biz:0,jour:0,creat:0,ba:0,tour:0,lang:0};
+
+function startQuiz() {
+  document.getElementById('intro-section').style.display = 'none';
+  document.getElementById('quiz-section').style.display = 'block';
+  render();
+}
 
 function render() {
   const q = questions[current];
-  document.getElementById('q-label').textContent = `Вопрос ${current+1} из ${questions.length}`;
+  document.getElementById('q-label').textContent = 'Вопрос ' + (current+1) + ' из ' + questions.length;
   document.getElementById('q-text').textContent = q.text;
-  document.getElementById('step-count').textContent = `${current+1} / ${questions.length}`;
-  document.getElementById('progress').style.width = `${((current+1)/questions.length)*100}%`;
+  document.getElementById('step-count').textContent = Math.round(((current+1)/questions.length)*100) + '%';
+  document.getElementById('progress').style.width = (((current+1)/questions.length)*100) + '%';
   const opts = document.getElementById('options');
   opts.innerHTML = '';
-  q.opts.forEach((o, i) => {
+  q.opts.forEach(function(o, i) {
     const div = document.createElement('div');
     div.className = 'opt' + (answers[current] === i ? ' selected' : '');
-    div.innerHTML = `<div class="opt-icon">${o.icon}</div><div class="opt-text">${o.text}</div>`;
-    div.onclick = () => select(i);
+    div.innerHTML = '<div class="opt-icon">' + o.icon + '</div><div class="opt-text">' + o.text + '</div>';
+    div.onclick = (function(idx){ return function(){ select(idx); }; })(i);
     opts.appendChild(div);
   });
   document.getElementById('btn-back').disabled = current === 0;
   document.getElementById('btn-next').disabled = answers[current] === undefined;
-  document.getElementById('btn-next').textContent = current === questions.length - 1 ? 'Узнать результат' : 'Далее';
+  document.getElementById('btn-next').textContent = current === questions.length - 1 ? 'Узнать результат 🎯' : 'Далее →';
 }
 
 function select(i) {
   answers[current] = i;
-  document.querySelectorAll('.opt').forEach((el, idx) => {
-    el.classList.toggle('selected', idx === i);
-  });
+  document.querySelectorAll('.opt').forEach(function(el, idx){ el.classList.toggle('selected', idx === i); });
   document.getElementById('btn-next').disabled = false;
 }
 
@@ -282,14 +238,14 @@ function goBack() {
 }
 
 function showResult() {
-  const allScores = {...scores};
-  questions.forEach((q, qi) => {
+  const scores = {intl:0,mark:0,it:0,fin:0,law:0,biz:0,jour:0,creat:0,ba:0,tour:0,lang:0};
+  questions.forEach(function(q, qi) {
     if (answers[qi] !== undefined) {
       const s = q.opts[answers[qi]].scores;
-      Object.keys(s).forEach(k => { allScores[k] = (allScores[k]||0) + s[k]; });
+      Object.keys(s).forEach(function(k){ scores[k] = (scores[k]||0) + s[k]; });
     }
   });
-  const top = Object.keys(allScores).sort((a,b) => allScores[b]-allScores[a])[0];
+  const top = Object.keys(scores).sort(function(a,b){ return scores[b]-scores[a]; })[0];
   const p = profiles[top] || profiles.biz;
   document.getElementById('res-emoji').textContent = p.emoji;
   document.getElementById('res-type').textContent = p.type;
@@ -299,12 +255,18 @@ function showResult() {
   document.getElementById('res-cta').textContent = p.cta;
   const careersEl = document.getElementById('res-careers');
   careersEl.innerHTML = '';
-  p.careers.forEach(c => {
-    careersEl.innerHTML += `<div class="career-card"><div class="career-icon">${c.icon}</div><div class="career-name">${c.name}</div></div>`;
-  });
+  p.careers.forEach(function(c){ careersEl.innerHTML += '<div class="career-card"><div class="career-icon">'+c.icon+'</div><div class="career-name">'+c.name+'</div></div>'; });
   document.getElementById('quiz-section').style.display = 'none';
   document.getElementById('result-section').style.display = 'block';
 }
 
-render();
+function restartQuiz() {
+  current = 0;
+  answers = [];
+  document.getElementById('result-section').style.display = 'none';
+  document.getElementById('quiz-section').style.display = 'block';
+  render();
+}
 </script>
+</body>
+</html>
